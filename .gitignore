@@ -1,0 +1,17 @@
+# Maven
+target/
+*.class
+
+# IntelliJ
+.idea/
+*.iml
+
+# Secrets - NEVER commit these
+src/main/resources/application.properties
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
