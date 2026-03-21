@@ -46,11 +46,13 @@ A production-grade REST API for tracking job applications built with Spring Boot
 ```
 DB_USERNAME=jobtracker_user
 DB_PASSWORD=jobtracker_pass
-JWT_SECRET=your-secret-key
+JWT_SECRET=your-base64-encoded-secret-min-44-chars
 MAIL_USERNAME=your@gmail.com
 MAIL_PASSWORD=your-app-password
 ```
-
+> **Note:** JWT_SECRET must be a Base64-encoded string.  
+> Generate one with: `openssl rand -base64 32`  
+> Your current secret `3cfa76ef...` is already a valid hex string encoded as Base64.
 ## API Endpoints
 
 ### Auth

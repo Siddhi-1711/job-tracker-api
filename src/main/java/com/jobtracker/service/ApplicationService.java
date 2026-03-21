@@ -80,33 +80,40 @@ public class ApplicationService {
     public List<ApplicationResponse> search(ApplicationSearchRequest request, String email) {
         User user = getUser(email);
 
+        // Start with all non-deleted applications for this user
+        List<JobApplication> applications =
+                applicationRepository.findByUserAndDeletedFalseOrderByCreatedAtDesc(user);
+
+        // Apply filters in-memory — supports combining multiple filters
         if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
-            return applicationRepository
-                    .searchByKeyword(user, request.getKeyword().trim())
-                    .stream().map(this::toResponse).toList();
-        }
-
-        if (request.getSource() != null) {
-            return applicationRepository
-                    .findByUserAndSource(user, request.getSource())
-                    .stream().map(this::toResponse).toList();
-        }
-
-        if (request.getStartDate() != null && request.getEndDate() != null) {
-            return applicationRepository
-                    .findByUserAndDateRange(user, request.getStartDate(), request.getEndDate())
-                    .stream().map(this::toResponse).toList();
+            String keyword = request.getKeyword().trim().toLowerCase();
+            applications = applications.stream()
+                    .filter(a -> a.getCompanyName().toLowerCase().contains(keyword)
+                            || a.getJobTitle().toLowerCase().contains(keyword))
+                    .toList();
         }
 
         if (request.getStatus() != null) {
-            return applicationRepository
-                    .findByUserAndStatusAndDeletedFalseOrderByCreatedAtDesc(user, request.getStatus())
-                    .stream().map(this::toResponse).toList();
+            applications = applications.stream()
+                    .filter(a -> a.getStatus() == request.getStatus())
+                    .toList();
         }
 
-        return applicationRepository
-                .findByUserAndDeletedFalseOrderByCreatedAtDesc(user)
-                .stream().map(this::toResponse).toList();
+        if (request.getSource() != null) {
+            applications = applications.stream()
+                    .filter(a -> a.getSource() == request.getSource())
+                    .toList();
+        }
+
+        if (request.getStartDate() != null && request.getEndDate() != null) {
+            applications = applications.stream()
+                    .filter(a -> a.getAppliedDate() != null
+                            && !a.getAppliedDate().isBefore(request.getStartDate())
+                            && !a.getAppliedDate().isAfter(request.getEndDate()))
+                    .toList();
+        }
+
+        return applications.stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -152,13 +159,10 @@ public class ApplicationService {
 
         return toResponse(application);
     }
-
     @Transactional
-    public ApplicationResponse updateStatus(Long id, ApplicationStatus status,
-                                            String email) {
+    public ApplicationResponse updateStatus(Long id, ApplicationStatus status, String email) {
         return updateStatus(id, status, email, null);
     }
-
     @Transactional
     public ApplicationResponse updateStatus(Long id, ApplicationStatus status,
                                             String email, String note) {
@@ -167,6 +171,12 @@ public class ApplicationService {
                         "Application not found with id: " + id));
 
         ApplicationStatus oldStatus = application.getStatus();
+
+        // No-op if status is the same — prevents duplicate history entries
+        if (oldStatus == status) {
+            return toResponse(application);
+        }
+
         application.setStatus(status);
         applicationRepository.save(application);
 
@@ -181,6 +191,8 @@ public class ApplicationService {
 
         return toResponse(application);
     }
+
+
     @Transactional
     public void delete(Long id, String email) {
         JobApplication application = applicationRepository.findByIdAndUserEmail(id, email)
