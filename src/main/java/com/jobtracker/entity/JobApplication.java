@@ -52,6 +52,17 @@ public class JobApplication {
     private String notes;
 
     private Integer salaryExpectation;
+    private String referralPerson;
+
+    private String recruiterName;
+
+    private String recruiterEmail;
+
+    private String recruiterPhone;
+
+    private String resumeVersion;
+
+    private String jdUrl;
 
     @CreationTimestamp
     @Column(updatable = false)

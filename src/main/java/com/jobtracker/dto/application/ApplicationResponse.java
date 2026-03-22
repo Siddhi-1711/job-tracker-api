@@ -25,6 +25,12 @@ public class ApplicationResponse {
     private LocalDate followUpDate;
     private String notes;
     private Integer salaryExpectation;
+    private String referralPerson;
+    private String recruiterName;
+    private String recruiterEmail;
+    private String recruiterPhone;
+    private String resumeVersion;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<InterviewRoundResponse> interviewRounds;

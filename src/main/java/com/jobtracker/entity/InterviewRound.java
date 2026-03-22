@@ -38,6 +38,8 @@ public class InterviewRound {
     private String notes;
 
     private String outcome;
+    @Column(columnDefinition = "TEXT")
+    private String prepNotes;
 
     private Boolean reminderSent = false;
 

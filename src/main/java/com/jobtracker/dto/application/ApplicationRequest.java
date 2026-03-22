@@ -2,6 +2,7 @@ package com.jobtracker.dto.application;
 
 import com.jobtracker.enums.ApplicationSource;
 import com.jobtracker.enums.ApplicationStatus;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import jakarta.validation.constraints.Min;
@@ -35,4 +36,21 @@ public class ApplicationRequest {
 
     @Min(value = 0, message = "Salary expectation cannot be negative")
     private Integer salaryExpectation;
+
+    @Size(max = 255, message = "Referral person name too long")
+    private String referralPerson;
+
+    @Size(max = 255, message = "Recruiter name too long")
+    private String recruiterName;
+
+    @Email(message = "Invalid recruiter email")
+    private String recruiterEmail;
+
+    @Size(max = 20, message = "Phone number too long")
+    private String recruiterPhone;
+
+    @Size(max = 100, message = "Resume version too long")
+    private String resumeVersion;
+
+
 }

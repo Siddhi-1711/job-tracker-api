@@ -48,6 +48,12 @@ public class ApplicationService {
                 .followUpDate(request.getFollowUpDate())
                 .notes(request.getNotes())
                 .salaryExpectation(request.getSalaryExpectation())
+                .referralPerson(request.getReferralPerson())
+                .recruiterName(request.getRecruiterName())
+                .recruiterEmail(request.getRecruiterEmail())
+                .recruiterPhone(request.getRecruiterPhone())
+                .resumeVersion(request.getResumeVersion())
+
                 .user(user)
                 .build();
 
@@ -141,6 +147,11 @@ public class ApplicationService {
         application.setFollowUpDate(request.getFollowUpDate());
         application.setNotes(request.getNotes());
         application.setSalaryExpectation(request.getSalaryExpectation());
+        application.setReferralPerson(request.getReferralPerson());
+        application.setRecruiterName(request.getRecruiterName());
+        application.setRecruiterEmail(request.getRecruiterEmail());
+        application.setRecruiterPhone(request.getRecruiterPhone());
+        application.setResumeVersion(request.getResumeVersion());
 
         if (request.getStatus() != null && !request.getStatus().equals(oldStatus)) {
             application.setStatus(request.getStatus());
@@ -261,6 +272,11 @@ public class ApplicationService {
                 .followUpDate(app.getFollowUpDate())
                 .notes(app.getNotes())
                 .salaryExpectation(app.getSalaryExpectation())
+                .referralPerson(app.getReferralPerson())
+                .recruiterName(app.getRecruiterName())
+                .recruiterEmail(app.getRecruiterEmail())
+                .recruiterPhone(app.getRecruiterPhone())
+                .resumeVersion(app.getResumeVersion())
                 .createdAt(app.getCreatedAt())
                 .updatedAt(app.getUpdatedAt())
                 .interviewRounds(rounds)
